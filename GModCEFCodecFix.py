@@ -11,6 +11,8 @@
 #	Discord: https://www.solsticegamestudios.com/chat.html
 #	Email: contact@solsticegamestudios.com
 
+# Chinese Fix: OriginalSnow
+
 import sys
 import os
 from subprocess import Popen
@@ -86,13 +88,13 @@ autoMode = False
 @atexit.register
 def exitHandler():
 	if not launchSuccess or autoMode is False:
-		input("Press Enter to continue...")
+		input("按下回车键继续...")
 
 # Set the title so it's not just some boring path
 if sys.platform == "win32":
-	os.system("title GModCEFCodecFix")
+	os.system("title Garry's Mod: CEF Codec 支持程序")
 else:
-	print("\33]0;GModCEFCodecFix\a", end='', flush=True)
+	print("\33]0;Garry's Mod: CEF Codec 支持程序\a", end='', flush=True)
 
 import urllib.request
 import requests
@@ -104,47 +106,47 @@ from socket import gaierror
 colorama.init()
 
 # Spit out the Software Info
-print(colored("GModCEFCodecFix\nCreated by: Solstice Game Studios\nHow To Guide:\n\thttps://www.solsticegamestudios.com/forums/threads/60/\nContact Us:\n\tDiscord: https://www.solsticegamestudios.com/chat.html\n\tEmail: contact@solsticegamestudios.com\n", "cyan"))
+contactInfo = "\n\nGMod CEF Codec官网地址:\n- https://www.solsticegamestudios.com/forums/threads/60/\n\n国内发行版联系方式:\n- 交流群: 105969906\n- 邮箱: i@teasmc.cn\n- 论坛：https://teasmc.cn\n"
 
-contactInfo = "\n\nIf you need help, follow the Guide first:\n- https://www.solsticegamestudios.com/forums/threads/60/\n\nIf that doesn't work, contact us:\n- Discord: https://www.solsticegamestudios.com/chat.html\n- Email: contact@solsticegamestudios.com\n"
+contactInfo2 = "\n国内发行版联系方式:\n\t> 交流群: 105969906\n\t> 邮箱: i@teasmc.cn\n> 论坛：https://teasmc.cn\n"
+
+downloadLink = "GModCEFCodecFix 最新版下载链接：https://gmodcef-1301161699.cos.ap-beijing.myqcloud.com/GModCefCodecFiles/GModCEFCodecFix.exe"
+
+
+print(colored("GMod CEF Codec 支持程序\n原作者: Solstice Game Studios\n修复: 初雪 OriginalSnow\n", "cyan"))
+print(colored(contactInfo2 + "\n", "cyan"))
+
 
 # Get CEFCodecFix's version and compare it with the version we have on the website
-localVersion = 0
+localVersion = 20230622
 remoteVersion = 0
 systemProxies = urllib.request.getproxies()
 
 if systemProxies:
 	print("System Proxies:\n" + str(systemProxies) + "\n")
 
-with open(getattr(sys, "frozen", False) and os.path.join(sys._MEIPASS, "version.txt") or "version.txt", "r") as versionFile:
-	localVersion = int(versionFile.read())
-
 try:
-	versionRequest = requests.get("https://raw.githubusercontent.com/solsticegamestudios/GModCEFCodecFix/master/version.txt", proxies=systemProxies, timeout=60)
-
-	if versionRequest.status_code == 200:
-		remoteVersion = int(versionRequest.text)
+	versionOnline = requests.get("https://gmodcef-1301161699.cos.ap-beijing.myqcloud.com/GModCefCodecFiles/version.txt", proxies=systemProxies)
+	if versionOnline.status_code == 200:
+		remoteVersion = int(versionOnline.text)
 
 		if remoteVersion > localVersion:
-			print(colored("WARNING: CEFCodecFix is out of date! Please get the latest version at\nhttps://github.com/solsticegamestudios/GModCEFCodecFix/releases", "red"))
-
-			secsToContinue = 5
-			while secsToContinue:
-				print(colored("\tContinuing in " + str(secsToContinue) + " seconds...", "yellow"), end="\r")
-				sleep(1)
-				secsToContinue -= 1
-
-			sys.stdout.write("\033[K\n")
+			print(colored("你当前正在使用的 GModCEFCodecFix 版本号为：" + str(localVersion) ,"yellow"))
+			print(colored("在线版本号："+ str(remoteVersion) +"!\n", "yellow"))
+			print(colored("你当前使用的 GModCEFCodecFix 版本已过时！请及时更新！", "red"))
 		else:
-			print(colored("You are running the latest version of CEFCodecFix [Local: " + str(localVersion) + " / Remote: " + str(remoteVersion) + "]!\n", "green"))
-	else:
-		sys.exit(colored("Error: Could not get CEFCodecFix remote version!\n\tStatus Code: " + str(versionRequest.status_code) + contactInfo, "red"))
-except gaierror as e:
-	sys.exit(colored("Error: Could not get CEFCodecFix remote version!\n\tLooks like you're having DNS Problems [Errno " + str(e.errno) + "].\n\tSee the 1.1.1.1 Setup instructions at https://1.1.1.1/dns/\n\tThey'll change your DNS Settings to something that'll probably work." + contactInfo, "red"))
-except requests.Timeout as e:
-	sys.exit(colored("Error: Could not get CEFCodecFix remote version!\n\tThe request timed out." + contactInfo, "red"))
+			print(colored("你当前正在使用的 GModCEFCodecFix 版本号为："+ str(localVersion) +"!", "yellow"))
+			print(colored("在线版本号："+ str(remoteVersion) +"!\n", "yellow"))
+
+		secsToContinue = 3
+		while secsToContinue:
+			print(colored("\t将在 " + str(secsToContinue) + " 秒后继续...", "yellow"), end="\r")
+			sleep(1)
+			secsToContinue -= 1
+		sys.stdout.write("\033[K\n")
+
 except Exception as e:
-	sys.exit(colored("Error: Could not get CEFCodecFix remote version!\n\tException: " + str(e) + contactInfo, "red"))
+	sys.exit(colored("错误: 无法连接至在线更新服务器!\n\t错误代码: " + str(versionOnline.status_code) + contactInfo, "red"))
 
 # Let's start the show
 from time import perf_counter
@@ -170,9 +172,9 @@ if len(sys.argv) >= 3:
 	if sys.argv[1] == "-a":
 		try:
 			autoMode = int(sys.argv[2])
-			print(colored("AUTO MODE: Enabled\n", "cyan"))
+			print(colored("自动模式: 已启用\n", "cyan"))
 		except ValueError:
-			print(colored("Warning: Auto Mode switch present but option invalid! Please specify a Launch Option Number.\n", "yellow"))
+			print(colored("警告: 自动模式配置文件出错，请手动选择启动项目\n", "yellow"))
 
 timeStart = perf_counter()
 
@@ -214,14 +216,14 @@ else:
 
 if steamPath:
 	steamPath = os.path.normcase(os.path.realpath(steamPath))
-	print("Steam Path:\n" + steamPath + "\n")
+	print("Steam 路径:\n" + steamPath + "\n")
 else:
-	sys.exit(colored("Error: Steam Path Not Found!\n" + steamPathHints[sys.platform] + contactInfo, "red"))
+	sys.exit(colored("错误: Steam 路径未找到!\n" + steamPathHints[sys.platform] + contactInfo, "red"))
 
 # Find Steam Library Folders Config
 steamLibraryFoldersConfigPath = os.path.join(steamPath, "steamapps", "libraryfolders.vdf")
 if not os.path.isfile(steamLibraryFoldersConfigPath):
-	sys.exit(colored("Error: Steam Library Folders Config File Not Found!" + contactInfo, "red"))
+	sys.exit(colored("错误: Steam Library Config未找到!" + contactInfo, "red"))
 
 with open(steamLibraryFoldersConfigPath, "r", encoding="UTF-8", errors="ignore") as steamLibraryFoldersConfigFile:
 	steamLibraryFoldersConfig = vdf.load(steamLibraryFoldersConfigFile, mapper=CaseInsensitiveDict)
@@ -247,7 +249,7 @@ for configKey in steamLibraryFoldersConfig:
 		continue
 
 if len(steamLibraries) == 0:
-	sys.exit(colored("Error: No Steam Libraries Found!" + contactInfo, "red"))
+	sys.exit(colored("错误: Steam Libraries 未找到!" + contactInfo, "red"))
 
 print("Steam Libraries:")
 print(steamLibraries)
@@ -255,7 +257,7 @@ print(steamLibraries)
 # Find most recent Steam User, which is probably the one they're using/want
 steamLoginUsersPath = os.path.join(steamPath, "config", "loginusers.vdf")
 if not os.path.isfile(steamLoginUsersPath):
-	sys.exit(colored("Error: Steam LoginUsers File Not Found!" + contactInfo, "red"))
+	sys.exit(colored("错误: Steam 用户文件未找到!" + contactInfo, "red"))
 
 steamUser = {"Timestamp": 0}
 with open(steamLoginUsersPath, "r", encoding="UTF-8", errors="ignore") as steamLoginUsersFile:
@@ -273,9 +275,9 @@ with open(steamLoginUsersPath, "r", encoding="UTF-8", errors="ignore") as steamL
 
 if steamUser["Timestamp"] > 0:
 	steamUser["steamID3"] = SteamID(steamUser["steamID64"]).steam3()
-	print("\nGot Most Recent Steam User: " + steamUser["PersonaName"] + " (" + steamUser["steamID64"] + " / " + steamUser["steamID3"] + ")")
+	print("\nSteam 当前登录: " + steamUser["PersonaName"] + " (" + steamUser["steamID64"] + " / " + steamUser["steamID3"] + ")")
 else:
-	sys.exit(colored("Error: Could not find Most Recent Steam User! Have you ever launched Steam?" + contactInfo, "red"))
+	sys.exit(colored("错误: 未获取到Steam在线状态，你启动Steam了吗?" + contactInfo, "red"))
 
 # Find GMod
 foundGMod = False
@@ -289,15 +291,15 @@ for path in steamLibraries:
 		curGModPath = os.path.join(path, *curGModPath)
 		if os.path.isdir(curGModPath):
 			if foundGMod:
-				sys.exit(colored("Error: Multiple Garry's Mod Installations Detected!\nPlease manually remove the unused version(s):\n\t" + gmodPath + "\n\t" + curGModPath + contactInfo, "red"))
+				sys.exit(colored("错误: 侦测到多个GMod安装路径!\n请移除未使用的版本:\n\t" + gmodPath + "\n\t" + curGModPath + contactInfo, "red"))
 			else:
 				foundGMod = True
 				gmodPath = curGModPath
 
 if foundGMod:
-	print("\nFound Garry's Mod:\n" + gmodPath + "\n")
+	print("\n已找到GMDO:\n" + gmodPath + "\n")
 else:
-	sys.exit(colored("Error: Could Not Find Garry's Mod!" + contactInfo, "red"))
+	sys.exit(colored("错误: 未找到GMOD!" + contactInfo, "red"))
 
 # Find GMod Manifest
 foundGModManifest = False
@@ -317,29 +319,33 @@ for path in steamLibraries:
 
 			if curGModManifestStr:
 				if foundGModManifest:
-					sys.exit(colored("Error: Multiple Garry's Mod App Manifests Detected!\nPlease manually remove the unused version(s):\n\t" + gmodManifestPath + "\n\t" + curGModManifestPath + contactInfo, "red"))
+					sys.exit(colored("错误: 查询到多个Garry's Mod Mainifest!\n请移除多余的无效版本:\n\t" + gmodManifestPath + "\n\t" + curGModManifestPath + contactInfo, "red"))
 				else:
 					foundGModManifest = True
 					gmodManifestPath = curGModManifestPath
 					gmodManifestStr = curGModManifestStr
 
 if foundGModManifest:
-	print("Found Garry's Mod Manifest:\n" + gmodManifestPath + "\n")
+	print("已找到 Garry's Mod Mainifest:\n" + gmodManifestPath + "\n")
 else:
-	sys.exit(colored("Error: Could Not Find Valid Garry's Mod Manifest!" + contactInfo, "red"))
+	sys.exit(colored("错误: 找不到有效的 Garry's Mod Manifest!" + contactInfo, "red"))
 
 # Get GMod Branch
 gmodManifest = vdf.loads(gmodManifestStr, mapper=CaseInsensitiveDict)
 gmodBranch = "betakey" in gmodManifest["AppState"]["UserConfig"] and gmodManifest["AppState"]["UserConfig"]["betakey"] or "main"
 
-print("Garry's Mod Branch:\n" + gmodBranch + "\n")
+print("Garry's Mod 版本:\n" + gmodBranch + "\n")
 
 # Make sure GMod is in a good state (fully installed, not updating)
 gmodState = gmodManifest["AppState"]["StateFlags"]
 if gmodState != "4" or gmodManifest["AppState"]["ScheduledAutoUpdate"] != "0":
+<<<<<<< Updated upstream
 	sys.exit(colored("Error: Garry's Mod isn't Ready. Please make sure it's fully installed, up to date (check Steam > Downloads), and not corrupt (Steam > Garry's Mod > Properties > Installed Files > Verify Integrity)." + contactInfo, "red"))
+=======
+	sys.exit(colored("错误: Garry's Mod 还未准备好！\n\t请确保 Garry's Mod 处于可用状态, 未在安装（或更新）, 并且文件未损坏！" + contactInfo, "red"))
+>>>>>>> Stashed changes
 
-print("Garry's Mod State:\n" + gmodState + "\n")
+print("Garry's Mod 状态:\n" + gmodState + "\n")
 
 # Get GMod's Steam AppInfo
 osTypeMap = {
@@ -348,11 +354,11 @@ osTypeMap = {
 	"linux": "linux"
 }
 
-print("Getting Steam AppInfo for GMod...")
+print("正在获取 GMod AppInfo...")
 
 steamAppInfoPath = os.path.join(steamPath, "appcache", "appinfo.vdf")
 if not os.path.isfile(steamAppInfoPath):
-	sys.exit(colored("Error: Steam AppInfo File Not Found!" + contactInfo, "red"))
+	sys.exit(colored("错误: Steam AppInfo 文件未找到!" + contactInfo, "red"))
 
 # Get GMod Executable Paths
 gmodEXELaunchOptions = []
@@ -365,7 +371,7 @@ with open(steamAppInfoPath, "rb") as steamAppInfoFile:
 			gmodLaunchConfig = app["data"]["appinfo"]["config"]["launch"]
 			break
 
-	print("\tPlatform: " + sys.platform)
+	print("\t平台: " + sys.platform)
 
 	for option in gmodLaunchConfig:
 		option = gmodLaunchConfig[option]
@@ -381,7 +387,7 @@ with open(steamAppInfoPath, "rb") as steamAppInfoFile:
 			# os.path.isfile failed sometimes
 			try:
 				with open(os.path.join(*pathParts), "rb"):
-					print("\t\tEXE Found")
+					print("\t\tEXE 已找到")
 					gmodEXELaunchOptions.append(option)
 			except OSError as e:
 				print("\t\t[Errno " + str(e.errno) + "] " + e.strerror)
@@ -390,14 +396,14 @@ with open(steamAppInfoPath, "rb") as steamAppInfoFile:
 
 gmodEXELaunchOptionsLen = len(gmodEXELaunchOptions)
 if gmodEXELaunchOptionsLen > 0:
-	print("GMod EXE Launch Options Detected: " + str(gmodEXELaunchOptionsLen) + "\n")
+	print("侦测到 GMod EXE 启动设置: " + str(gmodEXELaunchOptionsLen) + "\n")
 else:
-	sys.exit(colored("Error: Could not detect GMod EXE Launch Options!" + contactInfo, "red"))
+	sys.exit(colored("错误: 无法侦测 GMod EXE 启动设置!" + contactInfo, "red"))
 
 # Get the User Launch Options for GMod
 steamUserLocalConfigPath = os.path.join(steamPath, "userdata", steamUser["steamID3"].split(":")[2][:-1], "config", "localconfig.vdf")
 if not os.path.isfile(steamUserLocalConfigPath):
-	sys.exit(colored("Error: Steam User LocalConfig File Not Found!" + contactInfo, "red"))
+	sys.exit(colored("错误: Steam 用户本地文件未找到!" + contactInfo, "red"))
 
 gmodUserLaunchOptions = ""
 with open(steamUserLocalConfigPath, "r", encoding="UTF-8", errors="ignore") as steamUserLocalConfigFile:
@@ -409,11 +415,11 @@ with open(steamUserLocalConfigPath, "r", encoding="UTF-8", errors="ignore") as s
 
 # Some stupid guides include this
 if "-nochromium" in gmodUserLaunchOptions:
-	print(colored("WARNING: -nochromium is in GMod's Launch Options! CEF will not work with this.\n\tPlease go to Steam > Garry's Mod > Properties > General and remove it.\n\tAdditionally, if you have gmod-lua-menu installed, please uninstall it.", "red"))
+	print(colored("警告: Garry's Mod 启动项中含有 -nochromium！CEF 将无法继续工作！不过我们仍然会尝试为您修复！\n\t请前往 Steam > Garry's Mod > 属性 > 启动选项 中移除它\n\t此外，如果你安装了 gmod-lua-menu，请卸载它！", "red"))
 
-	secsToContinue = 5
+	secsToContinue = 7
 	while secsToContinue:
-		print(colored("\tContinuing in " + str(secsToContinue) + " seconds...", "yellow"), end="\r")
+		print(colored("\t将在 " + str(secsToContinue) + " 秒后继续...", "yellow"), end="\r")
 		sleep(1)
 		secsToContinue -= 1
 
@@ -421,24 +427,24 @@ if "-nochromium" in gmodUserLaunchOptions:
 
 # Get CEFCodecFix Manifest
 try:
-	manifestRequest = requests.get("https://raw.githubusercontent.com/solsticegamestudios/GModCEFCodecFix/master/manifest.json", proxies=systemProxies)
+	manifestRequest = requests.get("https://gmodcef-1301161699.cos.ap-beijing.myqcloud.com/GModCefCodecFiles/manifest.json", proxies=systemProxies)
 
 	if manifestRequest.status_code != 200:
-		sys.exit(colored("Error: CEFCodecFix Manifest Failed to Load! Status Code: " + str(manifestRequest.status_code) + contactInfo, "red"))
+		sys.exit(colored("错误: CEFCodecFix Manifest 载入失败（或无法连接至服务器）! 状态码: " + str(manifestRequest.status_code) + contactInfo, "red"))
 except Exception as e:
-	sys.exit(colored("Error: CEFCodecFix Manifest Failed to Load! Exception: " + str(e) + contactInfo, "red"))
+	sys.exit(colored("错误: CEFCodecFix Manifest 载入失败（或无法连接至服务器）! 异常: " + str(e) + contactInfo, "red"))
 
 manifest = manifestRequest.json()
 
 if not sys.platform in manifest:
-	sys.exit(colored("Error: This Operating System is not supported by CEFCodecFix!" + contactInfo, "red"))
+	sys.exit(colored("错误: 你当前的操作系统不兼容 CEFCodecFix! \n程序即将退出！" + contactInfo, "red"))
 
 if not gmodBranch in manifest[sys.platform]:
-	sys.exit(colored("Error: This Branch of Garry's Mod is not supported! Please go to Steam > Garry's Mod > Properties > Betas, select the x86-64 beta, then try again!" + contactInfo, "red"))
-
+	sys.exit(colored("错误: 不支持该 Garry's Mod 的分支! 请将 GMod 切换为 x86-64 测试版后再试" + contactInfo, "red"))
+	
 # Check File Status
 manifest = manifest[sys.platform][gmodBranch]
-print("CEFCodecFix Manifest Loaded!\nChecking Files to see what needs to be Fixed...")
+print("CEFCodecFix Manifest 监测成功!\n正在检索文件列表...")
 
 def getFileSHA256(filePath):
 	fileSHA256 = sha256()
@@ -456,8 +462,8 @@ def getFileSHA256(filePath):
 
 	return True, fileSHA256.hexdigest().upper()
 
-cacheFileFailed = "\nError: Cannot Access One or More Files in CEFCodecFix cache.\nPlease verify that CEFCodecFix has read/write permissions to the CEFCodecFixFiles directory (try running as admin)" + contactInfo
-gmodFileFailed = "\nError: Cannot Access One or More Files in Garry's Mod Installation.\nPlease verify that Garry's Mod is closed, Steam is not updating it, and that CEFCodecFix has read/write permissions to its directory (try running as admin)" + contactInfo
+cacheFileFailed = "\n错误: 无法访问 CEFCodecFix 缓存文件.\n请验证 CEFCodecFix 是否有权限访问 CEFCodecFixFiles 文件夹 (请用管理员身份运行)" + contactInfo
+gmodFileFailed = "\n错误: 无法访问 Garry's Mod 安装路径.\n请确保 Garry's Mod 已关闭, Steam 没有在更新 Garry's Mod, 并且 CEFCodecFix 有对其文件夹进行修改的能力 (请用管理员身份运行)" + contactInfo
 blankFileSHA256 = "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
 filesToWipe = []
 filesToUpdate = []
@@ -474,18 +480,18 @@ def determineFileIntegrityStatus(file):
 			if fileSHA256OrException == manifest[file]["original"]:
 				# And it matches the original
 				filesToUpdate.append(file)
-				return True, "\t" + file + ": Needs Fix"
+				return True, "\t" + file + ": 需要被修复"
 			elif manifest[file]["original"] == blankFileSHA256:
 				# And it was empty originally, so we're gonna wipe it first
 				filesToWipe.append(file)
 				filesToUpdate.append(file)
-				return True, "\t" + file + ": Needs Wipe + Fix"
+				return True, "\t" + file + ": 需要被重新下载"
 			else:
 				# And it doesn't match the original...
 				fileNoMatchOriginal = True
-				return True, "\t" + file + ": Does Not Match Original!"
+				return True, "\t" + file + ": 文件损坏（或被修改）!"
 		else:
-			return True, "\t" + file + ": Already Fixed"
+			return True, "\t" + file + ": 检测通过"
 	else:
 		return False, "\t" + file + ": " + fileSHA256OrException
 
@@ -502,10 +508,14 @@ with ThreadPoolExecutor() as executor:
 
 # Something's wrong; bail before we break their installation or something
 if fileNoMatchOriginal:
+<<<<<<< Updated upstream
 	sys.exit(colored("\nError: One or More Files failed to match the Original Checksum!\n\tPlease go to Steam > Garry's Mod > Properties > Installed Files, Verify Integrity, then try again!" + contactInfo, "red"))
+=======
+	sys.exit(colored("\n错误: 一个或多个文件已损坏（或被修改）\n\t请重新验证 Garry's Mod 游戏完整性!" + contactInfo + "注：出现此条错误时可能代表 GCCF 不适配当前的 GMod 版本，请联系 初雪(微信号：GLXY30) 进行同步更新！", "red"))
+>>>>>>> Stashed changes
 
 if len(filesToUpdate) > 0:
-	print("\nFixing Files...")
+	print("\n正尝试修复文件中...")
 
 	curDir = os.path.dirname(sys.executable) if getattr(sys, "frozen", False) else os.path.dirname(os.path.normcase(os.path.realpath(__file__)))
 	cacheDir = os.path.join(curDir, "GModCEFCodecFixFiles")
@@ -528,11 +538,11 @@ if len(filesToUpdate) > 0:
 
 		if not cachedFileValid:
 			patchURL = manifest[file]["patch-url"]
-			print("\tDownloading: " + patchURL + "...")
+			print("\t下载 > " + patchURL + "...")
 			patchURLRequest = requests.get(patchURL, proxies=systemProxies)
 
 			if patchURLRequest.status_code != 200:
-				sys.exit(colored("Error: Failed to Download " + file + " | HTTP " + str(patchURLRequest.status_code) + contactInfo, "red"))
+				sys.exit(colored("错误: 下载失败 " + file + " | HTTP " + str(patchURLRequest.status_code) + contactInfo, "red"))
 			else:
 				# Create needed directories if they don't exist already
 				os.makedirs(os.path.dirname(patchFilePath), exist_ok = True)
@@ -540,7 +550,7 @@ if len(filesToUpdate) > 0:
 					newCEFPatch.write(patchURLRequest.content)
 
 	for file in filesToUpdate:
-		print("\tPatching: " + file + "...")
+		print("\t校验文件 > " + file + "...")
 
 		originalFilePath = os.path.join(gmodPath, file)
 		patchFilePath = os.path.normcase(os.path.realpath(os.path.join(cacheDir, file + ".bsdiff")))
@@ -552,11 +562,11 @@ if len(filesToUpdate) > 0:
 				os.remove(originalFilePath)
 			except Exception as e:
 				# Probably some read/write issue
-				print(colored("\tException (Original Wipe): " + str(e), "yellow"))
+				print(colored("\t异常 (删除) > " + str(e), "yellow"))
 				sys.exit(colored(gmodFileFailed, "red"))
 
 		if not os.path.isfile(originalFilePath):
-			print("\t\tOriginal doesn't exist, setting to NULL")
+			print("\t\t文件不存在，跳过...")
 			originalFilePath = "NUL" if sys.platform == "win32" else "/dev/null"
  
 		# Try and open target files, creating them if they don't exist
@@ -564,7 +574,7 @@ if len(filesToUpdate) > 0:
 			os.makedirs(os.path.dirname(fixedFilePath), exist_ok = True)
 			open(fixedFilePath, "a+b").close()
 		except Exception as e:
-			print(colored("\tException (Fixed): " + str(e), "yellow"))
+			print(colored("\t异常 (修复) > " + str(e), "yellow"))
 			sys.exit(colored(gmodFileFailed, "red"))
 
 		if os.access(patchFilePath, os.R_OK):
@@ -577,22 +587,22 @@ if len(filesToUpdate) > 0:
 			file_patch(originalFilePath, fixedFilePath, patchFilePath)
 		except Exception as e:
 			# Probably some read/write issue
-			print(colored("\tException: " + str(e), "yellow"))
+			print(colored("\t异常 > " + str(e), "yellow"))
 			sys.exit(colored(gmodFileFailed, "red"))
 else:
-	print("\nNo Files Need Fixing!")
+	print("\n今日风景真不错！")
 
-print(colored("\nCEFCodecFix applied successfully! Took " + str(round(perf_counter() - timeStart, 4)) + " second(s).", "green"))
+print(colored("\nCEFCodecFix 成功启动! 启动时间: " + str(round(perf_counter() - timeStart, 4)) + " 秒.", "green"))
 
 if gmodEXELaunchOptionsLen == 1:
 	gmodEXESelected = 0
 
 	validShouldLaunch = False
 	while validShouldLaunch == False:
-		print("\nDo you want to Launch Garry's Mod now? (yes/no)")
+		print("\n是否启动 Garry's Mod ? (yes/no)")
 
 		if autoMode is not False:
-			print(">>> " + colored("AUTO MODE: yes", "cyan"))
+			print(">>> " + colored("自动模式: yes", "cyan"))
 
 		shouldLaunch = "yes" if autoMode is not False else input(">>> ")
 		try:
@@ -604,10 +614,10 @@ if gmodEXELaunchOptionsLen == 1:
 				validShouldLaunch = True
 				shouldLaunch = False
 			else:
-				print("That's not a valid option.")
+				print("选项无效.")
 				autoMode = False
 		except ValueError:
-			print("That's not a valid option.")
+			print("选项无效.")
 			autoMode = False
 
 	if not shouldLaunch:
@@ -618,14 +628,14 @@ elif sys.platform == "win32":
 
 	validGModEXESelection = False
 	while validGModEXESelection == False:
-		print("\nPlease enter the option number you want to launch Garry's Mod with (or CTRL+C to quit):")
+		print("\n请输入你想启动的 Garry's Mod 代号 (使用 CTRL+C 退出):")
 		optionNum = 0
 		for option in gmodEXELaunchOptions:
 			print("\t" + str(optionNum) + " | " + option["description"])
 			optionNum += 1
 
 		if autoMode is not False:
-			print(">>> " + colored("AUTO MODE: Selected Option " + str(autoMode), "cyan"))
+			print(">>> " + colored("自动模式: 已选择 " + str(autoMode), "cyan"))
 
 		try:
 			gmodEXESelected = autoMode if autoMode is not False else input(">>> ")
@@ -634,15 +644,15 @@ elif sys.platform == "win32":
 				if gmodEXESelected < gmodEXELaunchOptionsLen:
 					validGModEXESelection = True
 				else:
-					print("That's not a valid option.")
+					print("选项无效.")
 					autoMode = False
 			except ValueError:
-				print("That's not a valid option.")
+				print("选项无效.")
 				autoMode = False
 		except KeyboardInterrupt:
-			sys.exit("CTRL+C\n")
+			sys.exit("程序已退出\n")
 
-print(colored("\nLaunching Garry's Mod:", "green"))
+print("\n>>> " + colored("正在启动 Garry's Mod:", "green"))
 
 if sys.platform == "win32":
 	gmodEXE = os.path.join(gmodPath, gmodEXELaunchOptions[gmodEXESelected]["executable"]) + " " + gmodEXELaunchOptions[gmodEXESelected]["arguments"]
