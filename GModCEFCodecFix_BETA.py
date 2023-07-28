@@ -92,7 +92,7 @@ def exitHandler():
 
 # Set the title so it's not just some boring path
 if sys.platform == "win32":
-	os.system("title Garry's Mod: CEF Codec 支持程序")
+	os.system("title Garry's Mod: CEF Codec (Night) 支持程序")
 else:
 	print("\33]0;Garry's Mod: CEF Codec 支持程序\a", end='', flush=True)
 
@@ -113,50 +113,34 @@ contactInfo2 = "\n国内发行版联系方式:\n\t> 交流群: 105969906\n\t> �
 downloadLink = "GModCEFCodecFix 最新版下载链接：https://gmodcef-1301161699.cos.ap-beijing.myqcloud.com/GModCefCodecFiles/GModCEFCodecFix.exe"
 
 
-print(colored("GMod CEF Codec 支持程序\n原作者: Solstice Game Studios\n修复: 初雪 OriginalSnow\n", "cyan"))
+print(colored("GMod CEF Codec (Night) 支持程序\n原作者: Solstice Game Studios\n修复: 初雪 OriginalSnow\n", "cyan"))
 print(colored(contactInfo2 + "\n", "cyan"))
 
 
 # Get CEFCodecFix's version and compare it with the version we have on the website
-localVersion = 20230728
+localVersion = 20230622
 remoteVersion = 0
 systemProxies = urllib.request.getproxies()
-
-print(colored("正在联网检查最新版本...\n", "yellow"))
 
 if systemProxies:
 	print("System Proxies:\n" + str(systemProxies) + "\n")
 
-sleep(3)
-
 try:
 	versionOnline = requests.get("https://gmodcef-1301161699.cos.ap-beijing.myqcloud.com/GModCefCodecFiles/version.txt", proxies=systemProxies)
 	if versionOnline.status_code == 200:
-		version = versionOnline.text
-		secsToContinue = 3
+		remoteVersion = int(versionOnline.text)
 
-		IsOptional = version.find("#") > -1
-
-		if IsOptional:
-			remoteVersion = int(version.split("#")[0])
+		if remoteVersion > localVersion:
+			print(colored("你当前正在使用的 GModCEFCodecFix 版本号为：" + str(localVersion) ,"yellow"))
+			print(colored("在线版本号："+ str(remoteVersion) +"!\n", "yellow"))
+			print(colored("你当前使用的 GModCEFCodecFix 版本已过时！请及时更新！\n\n", "red"))
+			print(colored("警告：你当前使用的版本是强制跳过SHA256校验版，请谨慎使用该版本！如非必须请使用正常版本\n", "red"))
 		else:
-			remoteVersion = int(version.split("*")[0]) or int(version)
+			print(colored("你当前正在使用的 GModCEFCodecFix 版本号为："+ str(localVersion) +"!", "yellow"))
+			print(colored("在线版本号："+ str(remoteVersion) +"!\n\n", "yellow"))
+			print(colored("警告：你当前使用的版本是强制跳过SHA256校验版，请谨慎使用该版本！如非必须请使用正常版本\n", "red"))
 
-		if (remoteVersion > localVersion and not IsOptional):
-			print(colored("你当前使用的 GModCEFCodecFix 版本已过时！", "red"))
-			print(colored("当前版本：" + str(localVersion) ,"yellow"))
-			print(colored("最新版本：" + str(remoteVersion) + "\n", "yellow"))
-			sys.exit(colored(downloadLink, "red"))
-		else:
-			if(remoteVersion != localVersion and IsOptional):
-				print(colored("检测到可选更新！", "red"))
-				print(colored("当前版本：" + str(localVersion) ,"yellow"))
-				print(colored("最新版本：" + str(remoteVersion) + "\n", "yellow"))
-				print(colored(downloadLink, "red"))
-			else:
-				print(colored("恭喜你使用的是最新版本！", "blue"))
-				print(colored("版本号：" + str(localVersion) + "\n","yellow"))
-
+		secsToContinue = 10
 		while secsToContinue:
 			print(colored("\t将在 " + str(secsToContinue) + " 秒后继续...", "yellow"), end="\r")
 			sleep(1)
@@ -309,7 +293,7 @@ for path in steamLibraries:
 		curGModPath = os.path.join(path, *curGModPath)
 		if os.path.isdir(curGModPath):
 			if foundGMod:
-				sys.exit(colored("错误: 侦测到多个GMod安装路径!\n请移除未使用的版本:\n\t" + gmodPath + "\n\t" + curGModPath + "你仍需要删除多余目录下的 steamapps/appmanifest_4000.acf" + contactInfo, "red"))
+				sys.exit(colored("错误: 侦测到多个GMod安装路径!\n请移除未使用的版本:\n\t" + gmodPath + "\n\t" + curGModPath + contactInfo, "red"))
 			else:
 				foundGMod = True
 				gmodPath = curGModPath
@@ -502,8 +486,8 @@ def determineFileIntegrityStatus(file):
 				return True, "\t" + file + ": SHA256校验通过"
 			else:
 				# And it doesn't match the original...
-				fileNoMatchOriginal = True
-				return True, "\t" + file + ": SHA256校验错误"
+				# fileNoMatchOriginal = True
+				return True, "\t" + file + ": SHA256校验错误（仍将尝试修复）"
 		else:
 			return True, "\t" + file + ": 检测通过"
 	else:

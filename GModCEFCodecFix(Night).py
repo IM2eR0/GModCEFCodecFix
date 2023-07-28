@@ -106,11 +106,11 @@ from socket import gaierror
 colorama.init()
 
 # Spit out the Software Info
-contactInfo = "\n\nGMod CEF Codec官网地址:\n- https://www.solsticegamestudios.com/forums/threads/60/\n\n国内发行版联系方式:\n- 交流群: 105969906\n- 邮箱: i@teasmc.cn\n- 论坛：https://teasmc.cn\n"
+contactInfo = "\n\n注意: Night 版本所有的错误均不受理\n"
 
-contactInfo2 = "\n国内发行版联系方式:\n\t> 交流群: 105969906\n\t> 邮箱: i@teasmc.cn\n> 论坛：https://teasmc.cn\n"
+contactInfo2 = "\n出现问题请勿反馈，您将不会得到任何官方解答\n"
 
-downloadLink = "GModCEFCodecFix 最新版下载链接：https://gmodcef-1301161699.cos.ap-beijing.myqcloud.com/GModCefCodecFiles/GModCEFCodecFix.exe"
+downloadLink = "GModCEFCodecFix 最新版下载链接：https://gmodcef-1301161699.cos.ap-beijing.myqcloud.com/GModCefCodecFiles/GModCEFCodecFix(Night).exe"
 
 
 print(colored("GMod CEF Codec 支持程序\n原作者: Solstice Game Studios\n修复: 初雪 OriginalSnow\n", "cyan"))
@@ -118,7 +118,7 @@ print(colored(contactInfo2 + "\n", "cyan"))
 
 
 # Get CEFCodecFix's version and compare it with the version we have on the website
-localVersion = 20230728
+localVersion = 20230727
 remoteVersion = 0
 systemProxies = urllib.request.getproxies()
 
@@ -133,7 +133,6 @@ try:
 	versionOnline = requests.get("https://gmodcef-1301161699.cos.ap-beijing.myqcloud.com/GModCefCodecFiles/version.txt", proxies=systemProxies)
 	if versionOnline.status_code == 200:
 		version = versionOnline.text
-		secsToContinue = 3
 
 		IsOptional = version.find("#") > -1
 
@@ -148,20 +147,14 @@ try:
 			print(colored("最新版本：" + str(remoteVersion) + "\n", "yellow"))
 			sys.exit(colored(downloadLink, "red"))
 		else:
-			if(remoteVersion != localVersion and IsOptional):
-				print(colored("检测到可选更新！", "red"))
-				print(colored("当前版本：" + str(localVersion) ,"yellow"))
-				print(colored("最新版本：" + str(remoteVersion) + "\n", "yellow"))
-				print(colored(downloadLink, "red"))
-			else:
-				print(colored("恭喜你使用的是最新版本！", "blue"))
-				print(colored("版本号：" + str(localVersion) + "\n","yellow"))
+			print(colored("版本号：" + str(localVersion) + "\n","yellow"))
 
-		while secsToContinue:
-			print(colored("\t将在 " + str(secsToContinue) + " 秒后继续...", "yellow"), end="\r")
-			sleep(1)
-			secsToContinue -= 1
-		sys.stdout.write("\033[K\n")
+		print(colored("\t警告：你当前使用的版本是强制跳过SHA256校验版，请谨慎使用该版本！如非必须请使用正常版本\n", "red"))
+		input("按下回车键继续...")
+		print(colored("\t严重警告：该版本可能会损坏你的游戏文件，是否继续？\n", "red"))
+		input("按下回车键继续...")
+		print(colored("\t最终警告：Night 版本所有的错误均不受理，出现错误请勿询问，是否继续？\n", "red"))
+		input("按下回车键继续...")
 
 except Exception as e:
 	sys.exit(colored("错误: 无法连接至在线更新服务器!\n\t错误代码: " + str(versionOnline.status_code) + contactInfo, "red"))
@@ -309,7 +302,7 @@ for path in steamLibraries:
 		curGModPath = os.path.join(path, *curGModPath)
 		if os.path.isdir(curGModPath):
 			if foundGMod:
-				sys.exit(colored("错误: 侦测到多个GMod安装路径!\n请移除未使用的版本:\n\t" + gmodPath + "\n\t" + curGModPath + "你仍需要删除多余目录下的 steamapps/appmanifest_4000.acf" + contactInfo, "red"))
+				sys.exit(colored("错误: 侦测到多个GMod安装路径!\n请移除未使用的版本:\n\t" + gmodPath + "\n\t" + curGModPath + contactInfo, "red"))
 			else:
 				foundGMod = True
 				gmodPath = curGModPath
