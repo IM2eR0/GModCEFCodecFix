@@ -5,3 +5,4 @@ dist/**
 GModCEFCodecFixFiles/**
 /UPX
 nuitka-crash-report.xml
+/win32
