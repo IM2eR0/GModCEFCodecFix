@@ -2,8 +2,7 @@ colorama
 termcolor
 vdf
 requests
+httpx[brotli]
 steam
 steamid
 bsdiff4
-psutil; sys_platform == 'linux'
-xdg; sys_platform == 'linux'

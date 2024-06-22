@@ -3,3 +3,5 @@ __pycache__/**
 build/**
 dist/**
 GModCEFCodecFixFiles/**
+/UPX
+nuitka-crash-report.xml

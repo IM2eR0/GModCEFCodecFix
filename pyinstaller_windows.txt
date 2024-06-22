@@ -1,1 +1,5 @@
-pyinstaller --onefile GModCEFCodecFix.py --icon=GModCEFCodecFixIcon.ico
+pyinstaller --upx-dir "./UPX" -F GModCEFCodecFix.py --icon=GModPatchToolLogo.png --clean
+
+nuitka --windows-icon-from-ico=GModCEFCodecFixIcon.ico --mingw64 --show-progress --follow-imports --standalone --onefile GModCEFCodecFix.py
+
+C:\Users\10990\AppData\Local\Programs\Python\Python311\python.exe C:\Users\10990\AppData\Local\Programs\Python\Python311\Lib\site-packages\nuitka --windows-icon-from-ico=GModPatchToolLogo.png --mingw64 --show-progress --follow-imports --standalone --onefile GModCEFCodecFix.py

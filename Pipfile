@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+colorama = "*"
+termcolor = "*"
+vdf = "*"
+requests = "*"
+httpx = {extras = ["brotli"], version = "*"}
+steam = "*"
+steamid = "*"
+bsdiff4 = "*"
+pyinstaller = "*"
+rich = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"
